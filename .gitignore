@@ -1,0 +1,11 @@
+data/
+cfg/
+yolo.weights
+
+libdarknet.so
+darknet.py
+iothub_client.so
+
+edge-device-ca.cert.pem
+
+*.pyc
