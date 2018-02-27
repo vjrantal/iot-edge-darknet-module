@@ -33,7 +33,11 @@ while True:
         array = cv2.imread('data/dog.jpg')
 
     print('Using %s %ix%i image' % (type, array.shape[0], array.shape[1]))
+    time_before = time.time()
     result = detector.detect(array)
+    time_after = time.time()
+    print('Detection took %s seconds' % (time_after - time_before))
+
     print(json.dumps(result, indent=4))
 
     if sender:
