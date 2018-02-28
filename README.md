@@ -2,6 +2,8 @@
 
 Sample module for IoT Edge that uses [Darknet](https://github.com/pjreddie/darknet) for object detection.
 
+[![Build Status](https://travis-ci.org/vjrantal/iot-edge-darknet-module.svg?branch=master)](https://travis-ci.org/vjrantal/iot-edge-darknet-module)
+
 # Deploying to IoT Edge
 
 If you have installed the [extension for Azure CLI 2.0](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-create-deployment-with-cli-iot-extension), you can deploy the pre-built docker image with command like:

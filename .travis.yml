@@ -1,0 +1,12 @@
+sudo: required
+
+services:
+  - docker
+
+before_script:
+  - docker build -f azure-iot-sdk-python/Dockerfile -t vjrantal/azure-iot-sdk-python .
+  - docker build -f darknet/Dockerfile -t vjrantal/darknet .
+  - docker build -t vjrantal/iot-edge-darknet-module .
+
+script:
+  - docker run -e DETECTION_COUNT=1 vjrantal/iot-edge-darknet-module | tee /dev/tty | grep "Program exiting normally"

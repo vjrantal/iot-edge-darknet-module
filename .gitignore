@@ -9,3 +9,5 @@ iothub_client.so
 edge-device-ca.cert.pem
 
 *.pyc
+
+.vscode/
