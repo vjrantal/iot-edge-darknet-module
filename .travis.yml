@@ -4,6 +4,7 @@ services:
   - docker
 
 before_script:
+  - docker build -f base/Dockerfile -t vjrantal/iot-edge-darknet-base .
   - docker build -f azure-iot-sdk-python/Dockerfile -t vjrantal/azure-iot-sdk-python .
   - docker build -f darknet/Dockerfile -t vjrantal/darknet .
   - docker build -t vjrantal/iot-edge-darknet-module .
