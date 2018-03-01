@@ -5,7 +5,9 @@ FROM vjrantal/darknet:latest as darknet
 # some required packages were missing from the default
 # repository so keeping it simple and going with ubuntu for now.
 
-FROM ubuntu:16.04
+FROM vjrantal/iot-edge-darknet-base
+
+WORKDIR /
 
 # Copy in required dependencies
 

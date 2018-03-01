@@ -15,6 +15,7 @@ az iot hub apply-configuration --device-id <device-id> --hub-name <hub-name> --c
 # Building docker images
 
 ```
+docker build -f base/Dockerfile -t vjrantal/iot-edge-darknet-base .
 docker build -f azure-iot-sdk-python/Dockerfile -t vjrantal/azure-iot-sdk-python .
 docker build -f darknet/Dockerfile -t vjrantal/darknet .
 docker build -t vjrantal/iot-edge-darknet-module .
@@ -40,4 +41,33 @@ The environment variable `OPENCV_CAMERA_INDEX` can be set to select the used ind
 
 ```
 "createOptions": "{\"Env\":[\"OPENCV_CAMERA_INDEX=1\"],\"HostConfig\":{\"Privileged\":true}}"
+```
+
+# Running on Jetson TX2
+
+The architecture of the Jetson TX2 device is:
+
+```
+root@tegra-ubuntu:~# uname -m
+aarch64
+```
+
+Since IoT Edge has not published images for that exact architecture, the default options will fail. Luckily, the arm32v7 images that can be found from [https://hub.docker.com/r/microsoft/azureiotedge-agent/tags/](https://hub.docker.com/r/microsoft/azureiotedge-agent/tags/), but one must explicitly choose those.
+
+The IoT Edge Agent image is chosen in the setup phase and can be done with flag:
+
+```
+  --image               Set the Edge Agent image. Optional.
+```
+To the `iotedgectl setup` command. The image I tested with was `microsoft/azureiotedge-agent:1.0.0-preview020-linux-arm32v7`.
+
+The IoT Edge Hub image is chosen during deployment and one can see an example at [./jetson-tx2/deployment.json](./jetson-tx2/deployment.json).
+
+When building the docker images, two things should be noted. The base used should the one from[./jetson-tx2/Dockerfile](./jetson-tx2/Dockerfile) and one should pass `gpu=1` to the darknet image so that GPU support will be enabled. Overall, the right commands to build the module would be like:
+
+```
+docker build -f jetson-tx2/Dockerfile -t vjrantal/iot-edge-darknet-base .
+docker build -f azure-iot-sdk-python/Dockerfile -t vjrantal/azure-iot-sdk-python .
+docker build -f darknet/Dockerfile -t vjrantal/darknet . --build-arg gpu=1
+docker build -t vjrantal/iot-edge-darknet-module .
 ```
