@@ -71,3 +71,20 @@ docker build -f azure-iot-sdk-python/Dockerfile -t vjrantal/azure-iot-sdk-python
 docker build -f darknet/Dockerfile -t vjrantal/darknet . --build-arg gpu=1
 docker build -t vjrantal/iot-edge-darknet-module .
 ```
+
+# Running on DSVM
+
+Azure has so called [DSVM](https://azure.microsoft.com/en-us/services/virtual-machines/data-science-virtual-machines/) that is pre-configured for data science workflows. After creating the DSVM, make sure you have latest nvidia-docker installed. To check that this pre-step is working, run this command:
+
+```
+docker run --runtime=nvidia nvidia/cuda:9.0-devel-ubuntu16.04 nvidia-smi
+```
+
+If above works, you can build the module with these commands:
+
+```
+docker build -f nvidia-docker/Dockerfile -t vjrantal/iot-edge-darknet-base .
+docker build -f azure-iot-sdk-python/Dockerfile -t vjrantal/azure-iot-sdk-python .
+docker build -f darknet/Dockerfile -t vjrantal/darknet . --build-arg gpu=1
+docker build -t vjrantal/iot-edge-darknet-module .
+```
