@@ -88,3 +88,14 @@ docker build -f azure-iot-sdk-python/Dockerfile -t vjrantal/azure-iot-sdk-python
 docker build -f darknet/Dockerfile -t vjrantal/darknet . --build-arg gpu=1
 docker build -t vjrantal/iot-edge-darknet-module .
 ```
+
+# Performance results
+
+Performance comparison while running the detection within docker using [this static image](https://github.com/pjreddie/darknet/blob/8f1b4e0962857d402f9d017fcbf387ef0eceb7c4/data/dog.jpg).
+
+| Environment | Seconds per detection | Notes |
+| --- | --- | --- |
+| Jetson TX2 | 0.75 | 256 core NVIDIA Pascal GPU |
+| MacBook Pro | 10.3 | Using CPU (2,8 GHz Intel Core i7) |
+| Raspberry Pi 3 | 337.6 | CPU (had to increase swap size to run) |
+| Standard NC6 DSVM | 0.23 | One-half NVIDIA K80 GPU (using nvidia-docker) |
