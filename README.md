@@ -59,7 +59,7 @@ The IoT Edge Agent image is chosen in the setup phase and can be done with flag:
 ```
   --image               Set the Edge Agent image. Optional.
 ```
-To the `iotedgectl setup` command. The image I tested with was `microsoft/azureiotedge-agent:1.0.0-preview020-linux-arm32v7`.
+To the `iotedgectl setup` command. The image I tested with was `microsoft/azureiotedge-agent:1.0.0-preview021-linux-arm32v7`.
 
 The IoT Edge Hub image is chosen during deployment and one can see an example at [./jetson-tx2/deployment.json](./jetson-tx2/deployment.json).
 
