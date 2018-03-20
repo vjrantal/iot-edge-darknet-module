@@ -99,3 +99,4 @@ Performance comparison while running the detection within docker using [this sta
 | MacBook Pro | 10.3 | Using CPU (2,8 GHz Intel Core i7) |
 | Raspberry Pi 3 | 337.6 | CPU (had to increase swap size to run) |
 | Standard NC6 DSVM | 0.23 | One-half NVIDIA K80 GPU (using nvidia-docker) |
+| Standard NV6 DSVM | 0.22 | One-half NVIDIA M60 GPU (using nvidia-docker) |
