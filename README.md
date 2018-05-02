@@ -1,16 +1,49 @@
 # IoT Edge Darknet module
 
-Sample module for IoT Edge that uses [Darknet](https://github.com/pjreddie/darknet) for object detection.
-
 [![Build Status](https://travis-ci.org/vjrantal/iot-edge-darknet-module.svg?branch=master)](https://travis-ci.org/vjrantal/iot-edge-darknet-module)
 
-# Deploying to IoT Edge
+Sample module for IoT Edge that uses [Darknet](https://github.com/pjreddie/darknet) for object detection.
 
-If you have installed the [extension for Azure CLI 2.0](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-create-deployment-with-cli-iot-extension), you can deploy the pre-built docker image with command like:
+When run in the context of [Azure IoT Edge](https://azure.microsoft.com/en-us/services/iot-edge/), this module will send the objects detected from a camera feed to the cloud.
+
+For example, if the camera sees a view such as below:
+
+![Sample view from camera](https://user-images.githubusercontent.com/207474/39513881-5a658de0-4dfe-11e8-9074-d9cbedb28fea.png)
+
+The data sent to the cloud would contain something like:
 
 ```
-az iot hub apply-configuration --device-id <device-id> --hub-name <hub-name> --content deployment.json
+[
+  [
+    "backpack", // label
+    0.7220373749732971, // probability
+    [ // bounding box
+      125.79165649414062,
+      330.9345397949219,
+      177.0498046875,
+      230.3690948486328
+    ]
+  ],
+  [
+    "car",
+    ...
+  ],
+  [
+    "cup",
+    ...
+  ]
+]
 ```
+
+Below instructions to run locally (testing it out does not require GPU or connected camera), on a GPU virtual machine and on [Jetson TX2](https://developer.nvidia.com/embedded/buy/jetson-tx2) (or Drive PX2).
+
+# Running locally
+
+```
+docker run vjrantal/iot-edge-darknet-module
+```
+
+Above should work on any machine and without the IoT Edge runtime. The code within above image has conditional functionality depending on if run within the IoT Edge context and whether a camera is detected (loops the included static image if camera not found).
 
 # Building docker images
 
@@ -21,9 +54,13 @@ docker build -f darknet/Dockerfile -t vjrantal/darknet .
 docker build -t vjrantal/iot-edge-darknet-module .
 ```
 
-# Running locally
+# Deploying to IoT Edge
 
-If you want to run outside of docker, you need to build the azure-iot-sdk-python and darknet projects on your host machine and copy the build assets onto this directory. See the Dockerfile in the root which files need to be copied.
+If you have installed the [extension for Azure CLI 2.0](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-create-deployment-with-cli-iot-extension), you can deploy the pre-built docker image with command like:
+
+```
+az iot hub apply-configuration --device-id <device-id> --hub-name <hub-name> --content deployment.json
+```
 
 # Video device selection
 
@@ -43,7 +80,7 @@ The environment variable `OPENCV_CAMERA_INDEX` can be set to select the used ind
 "createOptions": "{\"Env\":[\"OPENCV_CAMERA_INDEX=1\"],\"HostConfig\":{\"Privileged\":true}}"
 ```
 
-# Running on Jetson TX2
+# Running on Jetson TX2 (or Drive PX2)
 
 The architecture of the Jetson TX2 device is:
 
