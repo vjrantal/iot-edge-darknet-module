@@ -126,6 +126,23 @@ docker build -f darknet/Dockerfile -t vjrantal/darknet . --build-arg gpu=1
 docker build -t vjrantal/iot-edge-darknet-module .
 ```
 
+## Default docker engine
+
+If you want to use GPU within the deployed Edge modules, configure the default docker runtime to be `nvidia`.
+For example, if you run docker on Ubuntu via systemd, you can edit the file `/etc/docker/daemon.json` to contain:
+
+```
+    "default-runtime": "nvidia"
+```
+
+And then run `sudo service docker restart` to make the change effective.
+
+If you had Edge already running, it is good to run `iotedgectl restart` and after that, verify that containers gets started with the `nvidia` runtime with a command such as:
+
+```
+docker inspect iot-edge-darknet-module | grep Runtime
+```
+
 # Performance results
 
 Performance comparison while running the detection within docker using [this static image](https://github.com/pjreddie/darknet/blob/8f1b4e0962857d402f9d017fcbf387ef0eceb7c4/data/dog.jpg).
