@@ -1,3 +1,5 @@
+**This project does not work with the latest Azure IoT Edge runtime until there is a working build for the aarch64 architecture!**
+
 # IoT Edge Darknet module
 
 [![Build Status](https://travis-ci.org/vjrantal/iot-edge-darknet-module.svg?branch=master)](https://travis-ci.org/vjrantal/iot-edge-darknet-module)
