@@ -2,7 +2,7 @@
 # https://github.com/Azure/azure-iot-sdk-python/blob/d3619f8d5ec0beca87b0d3b98833ae8053c39419/device/samples/iothub_client_sample_module_sender.py
 
 import iothub_client
-from iothub_client import IoTHubClient, IoTHubClientError, IoTHubTransportProvider
+from iothub_client import IoTHubModuleClient, IoTHubClientError, IoTHubTransportProvider
 from iothub_client import IoTHubMessage, IoTHubMessageDispositionResult, IoTHubError, DeviceMethodReturnValue
 
 # messageTimeout - the maximum time in milliseconds until a message times out.
@@ -18,24 +18,12 @@ def send_confirmation_callback(message, result, send_context):
 
 class Sender(object):
 
-    def __init__(self, connection_string, certificate_path=False,
-                 protocol=PROTOCOL):
+    def __init__(self, protocol=PROTOCOL):
         self.client_protocol = protocol
-        self.client = IoTHubClient(connection_string, protocol)
+        self.client = IoTHubModuleClient()
+        self.client.create_from_environment(protocol)
         # set the time until a message times out
         self.client.set_option('messageTimeout', MESSAGE_TIMEOUT)
-        # some embedded platforms need certificate information
-        if certificate_path:
-            self.set_certificates(certificate_path)
-
-    def set_certificates(self, certificate_path):
-        file = open(certificate_path, 'r')
-        try:
-            self.client.set_option('TrustedCerts', file.read())
-            print('IoT Edge TrustedCerts set successfully')
-        except IoTHubClientError as iothub_client_error:
-            print('Setting IoT Edge TrustedCerts failed (%s)' % iothub_client_error)
-        file.close()
 
     def send_event_to_output(self, outputQueueName, event, properties, send_context):
         if not isinstance(event, IoTHubMessage):

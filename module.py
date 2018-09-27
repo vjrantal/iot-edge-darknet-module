@@ -13,13 +13,12 @@ CAMERA_INDEX = int(os.getenv('OPENCV_CAMERA_INDEX', 0))
 # performed (0 means loop forever)
 DETECTION_COUNT = int(os.getenv('DETECTION_COUNT', 0))
 
-# These variables are set by the IoT Edge Agent
-CONNECTION_STRING = os.getenv('EdgeHubConnectionString', False)
-CA_CERTIFICATE = os.getenv('EdgeModuleCACertificateFile', False)
-IS_EDGE = CONNECTION_STRING and CA_CERTIFICATE or False
+# This environment variable is set when the module is started by the
+# IoT Edge runtime
+IS_EDGE = os.getenv('IOTEDGE_MODULEID', False)
 
 if IS_EDGE:
-    sender = Sender(CONNECTION_STRING, CA_CERTIFICATE)
+    sender = Sender()
 else:
     sender = False
 

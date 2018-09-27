@@ -5,13 +5,12 @@ WORKDIR /
 RUN apt-get update
 RUN apt-get install -y git
 
-# Use the modules-preview branch for support for IoT Edge modules
-RUN git clone -b modules-preview --single-branch https://github.com/Azure/azure-iot-sdk-python.git
+RUN git clone -b master --single-branch https://github.com/Azure/azure-iot-sdk-python.git
 
 WORKDIR /azure-iot-sdk-python
 
-# Use a tested commit of the SDK
-RUN git checkout d3619f8d5ec0beca87b0d3b98833ae8053c39419
+# Use a tested release of the SDK
+RUN git checkout release_2018_09_17
 RUN git submodule update --init --recursive
 
 WORKDIR /azure-iot-sdk-python/build_all/linux

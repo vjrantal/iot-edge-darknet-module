@@ -61,7 +61,7 @@ docker build -t vjrantal/iot-edge-darknet-module .
 If you have installed the [extension for Azure CLI 2.0](https://docs.microsoft.com/en-us/azure/iot-edge/tutorial-create-deployment-with-cli-iot-extension), you can deploy the pre-built docker image with command like:
 
 ```
-az iot hub apply-configuration --device-id <device-id> --hub-name <hub-name> --content deployment.json
+az iot edge set-modules --device-id <device-id> --hub-name <hub-name> --content deployment.json
 ```
 
 # Video device selection
@@ -91,16 +91,32 @@ root@tegra-ubuntu:~# uname -m
 aarch64
 ```
 
-Since IoT Edge has not published images for that exact architecture, the default options will fail. Luckily, the arm32v7 images that can be found from [https://hub.docker.com/r/microsoft/azureiotedge-agent/tags/](https://hub.docker.com/r/microsoft/azureiotedge-agent/tags/), but one must explicitly choose those.
+There is currently no release of the IoT Edge runtime for that particular architecture so following the [installation instructions](https://docs.microsoft.com/en-us/azure/iot-edge/quickstart-linux) as is does not work.
 
-The IoT Edge Agent image is chosen in the setup phase and can be done with flag:
+Instead of installing the runtime like [here](https://docs.microsoft.com/en-us/azure/iot-edge/quickstart-linux#install-and-configure-the-iot-edge-security-daemon) you can install the pre-built runtime version 1.0.2 that can be downloaded [here](https://github.com/vjrantal/iot-edge-darknet-module/files/2423742/iotedge-libiothsm-std-aarch64.zip). After unzipping, the packages can be installed with:
 
 ```
-  --image               Set the Edge Agent image. Optional.
+sudo dpkg -i libiothsm-std-1.0.2-aarch64.deb
+sudo dpkg -i iotedge_1.0.2-1_aarch64.deb
 ```
-To the `iotedgectl setup` command. The image I tested with was `microsoft/azureiotedge-agent:1.0.0-preview021-linux-arm32v7`.
+
+Also, since IoT Edge has not published images for this exact architecture, the default configurations will fail. The daemon must be configured to pull in the arm32 image, which can be achieved with this change in the configuration file:
+
+```
+diff /etc/iotedge/config.yaml.orig /etc/iotedge/config.yaml
+74c74
+<     image: "mcr.microsoft.com/azureiotedge-agent:1.0"
+---
+>     image: "mcr.microsoft.com/azureiotedge-agent:1.0@sha256:14b82d77818dfaece1b8266335ff1c23fde3e7fc9937c334b5ad322af4744ed3"
+```
 
 The IoT Edge Hub image is chosen during deployment and one can see an example at [./jetson-tx2/deployment.json](./jetson-tx2/deployment.json).
+
+Deployment can be done with a command like:
+
+```
+az iot edge set-modules --device-id <device-id> --hub-name <hub-name> --content ./jetson-tx2/deployment.json
+```
 
 When building the docker images, two things should be noted. The base used should the one from[./jetson-tx2/Dockerfile](./jetson-tx2/Dockerfile) and one should pass `gpu=1` to the darknet image so that GPU support will be enabled. Overall, the right commands to build the module would be like:
 
