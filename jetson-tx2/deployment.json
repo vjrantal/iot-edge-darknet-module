@@ -1,60 +1,58 @@
 {
-  "moduleContent": {
-    "$edgeAgent": {
-      "properties.desired": {
-        "schemaVersion": "1.0",
-        "runtime": {
-          "type": "docker",
-          "settings": {
-            "minDockerVersion": "v1.25",
-            "loggingOptions": ""
+  "modulesContent": {
+      "$edgeAgent": {
+          "properties.desired": {
+              "schemaVersion": "1.0",
+              "runtime": {
+                  "type": "docker",
+                  "settings": {
+                      "loggingOptions": "",
+                      "minDockerVersion": "v1.25",
+                      "registryCredentials": {}
+                  }
+              },
+              "systemModules": {
+                  "edgeAgent": {
+                      "type": "docker",
+                      "settings": {
+                          "image": "mcr.microsoft.com/azureiotedge-agent:1.0@sha256:14b82d77818dfaece1b8266335ff1c23fde3e7fc9937c334b5ad322af4744ed3",
+                          "createOptions": ""
+                      }
+                  },
+                  "edgeHub": {
+                      "type": "docker",
+                      "settings": {
+                          "image": "mcr.microsoft.com/azureiotedge-hub:1.0@sha256:6a817122d7aa6e5772de3a7d638962c182537d24d25678d23d9816691c58f01d",
+                          "createOptions": "{\"HostConfig\":{\"PortBindings\":{\"8883/tcp\":[{\"HostPort\":\"8883\"}],\"443/tcp\":[{\"HostPort\":\"443\"}],\"5671/tcp\":[{\"HostPort\":\"5671\"}]}}}"
+                      },
+                      "status": "running",
+                      "restartPolicy": "always"
+                  }
+              },
+              "modules": {
+                  "iot-edge-darknet-module": {
+                      "type": "docker",
+                      "settings": {
+                          "image": "vjrantal/iot-edge-darknet-module",
+                          "createOptions": "{\"Env\":[\"OPENCV_CAMERA_INDEX=1\"],\"HostConfig\":{\"Privileged\":true}}"
+                      },
+                      "status": "running",
+                      "restartPolicy": "always",
+                      "version": "1.0"
+                  }
+              }
           }
-        },
-        "systemModules": {
-          "edgeAgent": {
-            "type": "docker",
-            "settings": {
-              "image": "microsoft/azureiotedge-agent:1.0.0-preview021-linux-arm32v7",
-              "createOptions": "{}"
-            }
-          },
-          "edgeHub": {
-            "type": "docker",
-            "status": "running",
-            "restartPolicy": "always",
-            "settings": {
-              "image": "microsoft/azureiotedge-hub:1.0.0-preview021-linux-arm32v7",
-              "createOptions": "{}"
-            }
+      },
+      "$edgeHub": {
+          "properties.desired": {
+              "schemaVersion": "1.0",
+              "routes": {
+                  "route": "FROM /messages/* INTO $upstream"
+              },
+              "storeAndForwardConfiguration": {
+                  "timeToLiveSecs": 7200
+              }
           }
-        },
-        "modules": {
-          "iot-edge-darknet-module": {
-            "version": "1.0",
-            "type": "docker",
-            "status": "running",
-            "restartPolicy": "always",
-            "settings": {
-              "image": "virantaledgeregistry.azurecr.io/iot-edge-darknet-module",
-              "createOptions": "{\"Env\":[\"OPENCV_CAMERA_INDEX=1\"],\"HostConfig\":{\"Privileged\":true}}"
-            }
-          }
-        }
       }
-    },
-    "$edgeHub": {
-      "properties.desired": {
-        "schemaVersion": "1.0",
-        "routes": {
-          "route": "FROM /* INTO $upstream"
-        },
-        "storeAndForwardConfiguration": {
-          "timeToLiveSecs": 7200
-        }
-      }
-    },
-    "tempSensor": {
-      "properties.desired": {}
-    }
   }
 }
