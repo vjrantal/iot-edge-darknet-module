@@ -98,14 +98,17 @@ sudo dpkg -i libiothsm-std-1.0.2-aarch64.deb
 sudo dpkg -i iotedge_1.0.2-1_aarch64.deb
 ```
 
-Also, since IoT Edge has not published images for this exact architecture, the default configurations will fail. The daemon must be configured to pull in the arm32 image, which can be achieved with this change in the configuration file:
+Also, since IoT Edge has not published images for this exact architecture, the default configurations will fail. The daemon must be configured to pull in the arm32 image for all system modules, which can be achieved with this change in the configuration file:
 
 ```
 diff /etc/iotedge/config.yaml.orig /etc/iotedge/config.yaml
 74c74
 <     image: "mcr.microsoft.com/azureiotedge-agent:1.0"
 ---
->     image: "mcr.microsoft.com/azureiotedge-agent:1.0@sha256:14b82d77818dfaece1b8266335ff1c23fde3e7fc9937c334b5ad322af4744ed3"
+>     image: "mcr.microsoft.com/azureiotedge-agent:1.0.0-linux-arm32v7"
+<     image: "mcr.microsoft.com/azureiotedge-hub:1.0"
+---
+>     image: "mcr.microsoft.com/azureiotedge-hub:1.0.0-linux-arm32v7"
 ```
 
 The IoT Edge Hub image is chosen during deployment and one can see an example at [./jetson-tx2/deployment.json](./jetson-tx2/deployment.json).
